@@ -25,7 +25,8 @@ class APISettings(BaseSettings):
         
     ########################     data, model, information ...     ########################
     
-    #data_csv: str = root_dir + "/data/EuroMillions_numbers.csv"
+    data_patt: str = "atp_matches_[0-9]{4}"
+    data_route: str = root_dir + "/data/"
     model_file: str = root_dir + "/app/model/model.pkl"
     
     model_type = RandomForestClassifier

@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from app.core.config import get_api_settings
 from app.classes.models import ResponseJson
 from app.scripts.model_tools import launch_model_fitting
+from sklearn.ensemble import RandomForestClassifier
 
 import pickle
 
@@ -14,8 +15,8 @@ MODEL_FILE = settings.model_file
 ModelRouter = APIRouter()
 
 
-@ModelRouter.post(f"{API_MODEL_ROUTE}/retrain", response_model=ResponseJson)
-async def retrain_model() -> ResponseJson:
+@ModelRouter.post(f"{API_MODEL_ROUTE}/train", response_model=ResponseJson)
+async def train_model() -> ResponseJson:
     """Launch a new fitting of the model with the current dataset 
 
     Raises:
@@ -25,7 +26,7 @@ async def retrain_model() -> ResponseJson:
         (ResponseJson): Information about the process
     """
     try:
-        model = pickle.load(open(MODEL_FILE, "rb"))
+        model = RandomForestClassifier(random_state=0)
         model = await launch_model_fitting(model)
         pickle.dump(model, open(MODEL_FILE, "wb"))
     except Exception as e:
