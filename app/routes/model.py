@@ -2,8 +2,8 @@ from fastapi.routing import APIRouter
 from fastapi import HTTPException
 from typing import List
 from app.core.config import get_api_settings
-from app.classes.models import Player, ResponseJson
-from app.scripts.model_tools import retrieve_players, launch_model_fitting, preprocess_players
+from app.classes.models import Player, Tournament, ResponseJson
+from app.scripts.model_tools import retrieve_players, launch_model_fitting, preprocess_players, preprocess_tournaments, retrieve_tournaments
 from sklearn.ensemble import RandomForestClassifier
 
 
@@ -50,3 +50,20 @@ async def players_model() -> List[Player]:
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected Error during the players information loading : {e}")
     return players
+
+@ModelRouter.get(f"{API_MODEL_ROUTE}/tournaments", response_model=List[Tournament])
+async def tournaments_model() -> List[Tournament]:
+    """ List all tournaments in the dataset
+
+    Raises:
+        HTTPException: 500 status code if an error is raised during the process
+
+    Returns:
+        List[Tournament]: List of tournaments
+    """
+    try:
+        df = await preprocess_tournaments()
+        tournaments = await retrieve_tournaments(df)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected Error during the players information loading : {e}")
+    return tournaments

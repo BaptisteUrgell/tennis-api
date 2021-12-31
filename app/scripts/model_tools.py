@@ -1,4 +1,4 @@
-from app.classes.models import Player, Input
+from app.classes.models import Player, Input, Tournament
 from app.core.config import get_api_settings
 from sklearn.model_selection import train_test_split
 import app.scripts.general_tools as gt
@@ -103,3 +103,25 @@ async def preprocess_players()->pd.DataFrame:
     df = await gt.dataframe_qual2quan(df, q2q)
     df = await gt.add_stat_player(df)
     return df
+
+async def preprocess_tournaments()->pd.DataFrame:
+    """ Preprocess data to be used to enumerate tourneys
+
+    Returns:
+        pd.DataFrame: Dataframe of all tourneys
+    """
+    df = await gt.importResultMatch()
+    df = df[["tourney_name","surface"]]
+    df.drop_duplicates(inplace=True)
+    return df
+
+async def retrieve_tournaments(df: pd.DataFrame)-> List[Tournament]:
+    tournaments: List[Tournament] = []
+    df = df[["tourney_name","surface"]]
+    np_data = df.to_numpy()
+
+    for tourney in np_data:
+        tournament = Tournament(name=tourney[0], surface=tourney[1])
+        tournaments.append(tournament)        
+    
+    return tournaments
