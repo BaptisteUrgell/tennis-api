@@ -13,7 +13,6 @@ MODEL_FILE = settings.model_file
 
 PredictRouter = APIRouter()
 
-
 @PredictRouter.post(API_PREDICT_ROUTE, response_model=Combined)
 async def get_best_combined(matchs: List[Match])->Combined:
     """ Generate the combined bet which maximize the gain expectation
