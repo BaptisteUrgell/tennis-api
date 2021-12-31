@@ -9,7 +9,16 @@ class ResponseJson(BaseModel):
 
 class Player(BaseModel):
     """ Player Object containing name """
-    name: str  
+    name: str
+    id: int
+    age: float
+    rank_points: int
+    hand: str
+    carpet: int
+    grass: int
+    hard: int
+    clay: int
+    
 
 class Tournament(BaseModel):
     """ Tournament Obect containing name and surface """
@@ -18,10 +27,10 @@ class Tournament(BaseModel):
     
 class Match(BaseModel):
     """ Match Object containing players, odds, and tournament """
+    player0: Player
     player1: Player
-    player2: Player
+    odds0: float
     odds1: float
-    odds2: float
     tournament: Tournament
     
 class Bet(BaseModel):
@@ -37,3 +46,8 @@ class Combined(BaseModel):
     exp: float
     prob: float
     odds: float
+
+class Input(BaseModel):
+    """ Format for features in the model """
+    data: dict
+    columns: List[str] = ["tourney_name","surface_Clay","surface_Grass","surface_Hard","age","rank_points","hand_R","hand_L","Carpet","Grass","Hard","Clay"]
